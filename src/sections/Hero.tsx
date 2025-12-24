@@ -31,7 +31,7 @@ export default function Hero() {
             <button className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition">
               Get For Free
             </button>
-            <button className="flex items-center text-black px-6 py-3 rounded-lg hover:bg-gray-100 transition">
+            <button className="flex items-center text-black px-6 py-3 rounded-lg hover:bg-gray-400  transition">
               <span className="mr-2">Learn more</span>
               <Image
                 src="/icons/arrow-right.svg"

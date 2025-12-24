@@ -5,18 +5,25 @@ import { useState, useEffect } from "react";
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const menu = [
+    { label: "About", items: ["Company", "Team", "Careers", "Contact"] },
+    { label: "Features", items: ["Productivity", "Integrations", "Analytics", "Security"] },
+    { label: "Customers", items: ["Case Studies", "Testimonials", "Industries"] },
+    { label: "Updates", items: ["Blog", "Release Notes", "Roadmap"] },
+    { label: "Help", items: ["Docs", "Support", "Community"] },
+  ];
+
   return (
     <header className="w-full sticky top-0 z-50">
-      {/* Top Black Bar */}
+      {/* Top Bar */}
       <div className="flex items-center justify-center w-full h-20 bg-black text-white gap-3">
         <p className="text-white/60 hidden md:block">
           StreamLine your workflow and boost your productivity.
@@ -48,26 +55,17 @@ export default function Header() {
           className="sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-xl object-contain"
         />
 
-        {/* Navigation with dropdowns */}
+        {/* Desktop Menu */}
         <nav className="hidden md:flex gap-8 items-center relative">
-          {[
-            { label: "About", items: ["Company", "Team", "Careers", "Contact"] },
-            { label: "Features", items: ["Productivity", "Integrations", "Analytics", "Security"] },
-            { label: "Customers", items: ["Case Studies", "Testimonials", "Industries"] },
-            { label: "Updates", items: ["Blog", "Release Notes", "Roadmap"] },
-            { label: "Help", items: ["Docs", "Support", "Community"] },
-          ].map((menu, idx) => (
+          {menu.map((menuItem, idx) => (
             <div key={idx} className="group relative">
-              <a
-                href="#"
-                className="hover:text-blue-700 transition-colors duration-200"
-              >
-                {menu.label}
+              <a href="#" className="hover:text-blue-700 transition-colors duration-200">
+                {menuItem.label}
               </a>
               {/* Dropdown */}
-              <div className="absolute left-0 top-full mt-2 hidden group-hover:block w-48 bg-white shadow-lg rounded-xl border border-gray-100 p-3 transition-all">
+              <div className="absolute left-0 top-full mt-1 w-48 bg-white shadow-lg rounded-xl border border-gray-100 p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200 z-50">
                 <ul className="flex flex-col gap-2">
-                  {menu.items.map((item, subIdx) => (
+                  {menuItem.items.map((item, subIdx) => (
                     <li key={subIdx}>
                       <a
                         href="#"
@@ -87,7 +85,45 @@ export default function Header() {
             Get for free
           </button>
         </nav>
+
+        {/* Mobile Menu Button */}
+        <div className="md:hidden flex items-center">
+          <button onClick={() => setMobileOpen(!mobileOpen)}>
+            <span className="text-2xl">{mobileOpen ? "✖" : "☰"}</span>
+          </button>
+        </div>
       </div>
+
+      {/* Mobile Menu */}
+      {mobileOpen && (
+        <div className="md:hidden bg-white border-t border-gray-200 p-4">
+          {menu.map((menuItem, idx) => (
+            <div key={idx} className="mb-2">
+              <details className="group">
+                <summary className="cursor-pointer font-medium py-2 px-3 rounded-lg hover:bg-gray-100 transition">
+                  {menuItem.label}
+                </summary>
+                <ul className="pl-4 mt-2 flex flex-col gap-2">
+                  {menuItem.items.map((item, subIdx) => (
+                    <li key={subIdx}>
+                      <a
+                        href="#"
+                        className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition"
+                      >
+                        {item}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            </div>
+          ))}
+          {/* Mobile CTA Button */}
+          <button className="w-full bg-black text-white font-medium py-2 px-4 rounded-lg hover:bg-gray-800 transition mt-2">
+            Get for free
+          </button>
+        </div>
+      )}
     </header>
   );
 }
